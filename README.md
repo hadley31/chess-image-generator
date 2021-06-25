@@ -242,10 +242,12 @@ The resulting PNG's will be 1200px by 1200px.
 
 # Board Colors
 
-| Option | Type     | Default | Example          |
-|----------|----------|---------|------------------|
-| light     | `string` | *"rgb(240, 217, 181)"* | *"rgb(250,250,250)", "white", "#ffffff"* |
-| dark     | `string` | *"rgb(181, 136, 99)"* | *"rgb(0,0,0)", "black", "#000000"* |
+| Option     | Type     | Default | Example                                                 |
+|------------|----------|------------------------|------------------------------------------|
+| light      | `string` | *"rgb(240, 217, 181)"* | *"rgb(250,250,250)", "white", "#ffffff"* |
+| dark       | `string` | *"rgb(181, 136, 99)"*  | *"rgb(0,0,0)", "black", "#000000"*       |
+| labelLight | `string` | *dark*                 | *"rgb(250,250,250)", "white", "#ffffff"* |
+| labelDark  | `string` | *light*                | *"rgb(0,0,0)", "black", "#000000"*       |
 
 Light and dark determines the colors of both the light and dark squares respectively.
 

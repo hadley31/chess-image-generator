@@ -22,19 +22,26 @@ declare class ChessImageGenerator {
    * @property {string} [light] Color of light squares
    * @property {string} [dark] Color of dark squares
    * @property {"merida"|"alpha"|"cheq"|"cburnett"|"leipzig"} [style] Desired style of pieces
+   * @property {boolean} [drawLabels] Whether to draw row and column labels
+   * @property {string} [labelLight] Color of labels on light squares
+   * @property {string} [labelDark] Color of labels on dark squares
    * @property {boolean} [flipped] Whether the board is to be flipped or not
    */
+
   /**
-     * Object constructor, initializes options.
-     * @param {Options} [options] Optional options
-    
-     */
+   * Object constructor, initializes options.
+   * @param {Options} [options] Optional options
+   */
   constructor(options?: Options);
   chess: any;
   size: number;
   light: string;
   dark: string;
   style: "merida" | "alpha" | "cheq" | "cburnett" | "leipzig";
+  drawLabels: boolean;
+  labelLight: string;
+  labelDark: string;
+  flipped: boolean;
   ready: boolean;
   /**
    * Loads PGN into chess.js object.
@@ -82,6 +89,18 @@ type Options = {
    * Desired style of pieces
    */
   style?: "merida" | "alpha" | "cheq" | "cburnett" | "leipzig";
+  /**
+   * Whether to draw row and column labels
+   */
+  drawLabels?: boolean;
+  /**
+   * Color of labels on light squares
+   */
+  labelLight?: string;
+  /**
+   * Color of labels on dark squares
+   */
+  labelDark?: string;
   /**
    * Whether the board is to be flipped or not
    */

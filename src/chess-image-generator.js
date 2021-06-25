@@ -21,6 +21,9 @@ const {
  * @property {string} [light] Color of light squares
  * @property {string} [dark] Color of dark squares
  * @property {"merida"|"alpha"|"cheq"|"cburnett"|"leipzig"} [style] Desired style of pieces
+ * @property {boolean} [drawLabels] Whether to draw row and column labels
+ * @property {string} [labelLight] Color of labels on light squares
+ * @property {string} [labelDark] Color of labels on dark squares
  * @property {boolean} [flipped] Whether the board is to be flipped or not
  */
 /**
@@ -34,7 +37,10 @@ function ChessImageGenerator(options = {}) {
   this.light = options.light || defaultLight;
   this.dark = options.dark || defaultDark;
   this.style = options.style || defaultStyle;
-  this.flipped = options.flipped || false;
+  this.drawLabels = options.drawLabels !== false;
+  this.labelLight = options.labelLight || this.dark;
+  this.labelDark = options.labelDark || this.light;
+  this.flipped = options.flipped !== true;
 
   this.ready = false;
 }
@@ -102,21 +108,53 @@ ChessImageGenerator.prototype = {
     ctx.fillStyle = this.light;
     ctx.fillRect(0, 0, this.size, this.size);
 
+    const fontSize = this.size / 8 / 10;
+    ctx.font = `bold ${fontSize}pt Arial`
+    const textPadding = fontSize * 0.5;
+
     const row = this.flipped ? r => 7 - r + 1 : r => r + 1;
     const col = this.flipped ? c => 7 - c : c => c;
 
     for (let i = 0; i < 8; i += 1) {
       for (let j = 0; j < 8; j += 1) {
+        const x = (this.size / 8) * j;
+        const y = (this.size / 8) * (7 - i);
+        const width = this.size / 8;
+        const height = this.size / 8;
+
+        // Fill Dark Square
         if ((i + j) % 2 === 0) {
           ctx.fillStyle = this.dark;
-          ctx.fillRect(
-            (this.size / 8) * j,
-            (this.size / 8) * (7 - i),
-            this.size / 8,
-            this.size / 8
+          ctx.fillRect(x, y, width, height);
+        }
+        
+        // Draw Row Numbers
+        if (this.drawLabels && j == 0) {
+          const text = `${row(i)}`;
+          const { actualBoundingBoxAscent: letterHeight } = ctx.measureText(text);
+
+          ctx.fillStyle = i % 2 == 0 ? this.labelDark : this.labelLight;
+          ctx.fillText(
+            text,
+            x + textPadding,
+            y + letterHeight + textPadding
           );
         }
 
+        // Draw Column Letters
+        if (this.drawLabels && i == 0) {
+          const text = cols[col(j)];
+          const { width: letterWidth } = ctx.measureText(text);
+          ctx.fillStyle = j % 2 == 0 ? this.labelDark : this.labelLight;
+          ctx.fillText(
+            text,
+            x + width - letterWidth - textPadding,
+            y + height - textPadding
+          );
+        }
+
+
+        // Draw Piece Image
         const piece = this.chess.get(cols[col(j)] + row(i));
         if (
           piece &&
@@ -127,13 +165,7 @@ ChessImageGenerator.prototype = {
             filePaths[`${piece.color}${piece.type}`]
           }.png`;
           const imageFile = await loadImage(path.join(__dirname, image));
-          await ctx.drawImage(
-            imageFile,
-            (this.size / 8) * j,
-            (this.size / 8) * (7 - i),
-            this.size / 8,
-            this.size / 8
-          );
+          await ctx.drawImage(imageFile, x, y, width, height);
         }
       }
     }
