@@ -147,7 +147,7 @@ ChessImageGenerator.prototype = {
     const textPadding = fontSize * 0.5;
 
     const row = this.flipped ? r => 7 - r + 1 : r => r + 1;
-    const col = this.flipped ? c => 7 - c : c => c;
+    const col = this.flipped ? c => cols[7 - c] : c => cols[c];
 
     for (let i = 0; i < 8; i += 1) {
       for (let j = 0; j < 8; j += 1) {
@@ -177,7 +177,7 @@ ChessImageGenerator.prototype = {
 
         // Draw Column Letters
         if (this.drawLabels && i == 0) {
-          const text = cols[col(j)];
+          const text = col(j);
           const { width: letterWidth } = ctx.measureText(text);
           ctx.fillStyle = j % 2 == 0 ? this.labelDark : this.labelLight;
           ctx.fillText(
@@ -188,7 +188,7 @@ ChessImageGenerator.prototype = {
         }
 
         // Highlight Square
-        const square = cols[col(j)] + row(i);
+        const square = col(j) + row(i);
         const highlight = this.getSquareHighlight(square);
         if (highlight) {
           ctx.fillStyle = highlight;
