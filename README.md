@@ -251,6 +251,13 @@ The resulting PNG's will be 1200px by 1200px.
 
 Light and dark determines the colors of both the light and dark squares respectively.
 
+
+## Square Highlighting
+| Option    | Type     | Default                     | Example                          |
+|-----------|----------|-----------------------------|----------------------------------|
+| highlight | `string` | *"rgba(230, 184, 34, 0.6)"* | *"rgba(240,25,25, 0.7)", *"red"* |
+
+
 Colors can be passed in a variety of formats:
 
 | Color Type             | Example                      |
@@ -278,6 +285,23 @@ Colors can be passed in a variety of formats:
 var imageGenerator = new ChessImageGenerator({
     light: 'rgb(200, 200, 200)',
     dark: 'rgb(20, 20, 20)',
+});
+```
+
+## Highlight Coloring:
+<p align="">
+    <img width="300" src="./documentation/highlighting.png">
+</p>
+
+### Example:
+```js
+const imageGenerator = new ChessImageGenerator();
+imageGenerator.loadFEN('2k5/3PK3/7p/8/8/8/8/8 w - - 0 1');
+imageGenerator.setHighlightedSquares({
+    d6: true, // Uses this.highlight
+    d7: true, // Uses this.highlight
+    c8: 'red', // Uses custom highlight color
+    h6: false, // Won't be highlighted
 });
 ```
 

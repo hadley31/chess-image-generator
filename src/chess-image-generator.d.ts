@@ -5,6 +5,7 @@ export = ChessImageGenerator;
  * @property {number} [size] Pixel length of desired image
  * @property {string} [light] Color of light squares
  * @property {string} [dark] Color of dark squares
+ * @property {string} [highlight] Overlaid color of highlighted squares
  * @property {"merida"|"alpha"|"cheq"|"cburnett"|"leipzig"} [style] Desired style of pieces
  * @property {boolean} [flipped] Whether the board is to be flipped or not
  */
@@ -21,6 +22,7 @@ declare class ChessImageGenerator {
    * @property {number} [size] Pixel length of desired image
    * @property {string} [light] Color of light squares
    * @property {string} [dark] Color of dark squares
+   * @property {string} [highlight] Overlaid color of highlighted squares
    * @property {"merida"|"alpha"|"cheq"|"cburnett"|"leipzig"} [style] Desired style of pieces
    * @property {boolean} [drawLabels] Whether to draw row and column labels
    * @property {string} [labelLight] Color of labels on light squares
@@ -37,11 +39,13 @@ declare class ChessImageGenerator {
   size: number;
   light: string;
   dark: string;
+  highlight: string;
   style: "merida" | "alpha" | "cheq" | "cburnett" | "leipzig";
   drawLabels: boolean;
   labelLight: string;
   labelDark: string;
   flipped: boolean;
+  highlightedSquares: object
   ready: boolean;
   /**
    * Loads PGN into chess.js object.
@@ -59,10 +63,15 @@ declare class ChessImageGenerator {
    */
   loadArray(array: string[][]): void;
   /**
+   * 
+   * @param {object} squares Map of squares to highlight
+   */
+  setHighlightedSquares(squares: object): void
+  /**
    * Generates buffer image based on position
    * @returns {Promise<Buffer>} Image buffer
    */
-  generateBuffer(): Promise<any>;
+  generateBuffer(): Promise<Buffer>;
   /**
    * Generates PNG image based on position
    * @param {string} pngPath File name
@@ -86,6 +95,10 @@ type Options = {
    */
   dark?: string;
   /**
+   * Overlaid color of highlighted squares
+   */
+  highlight?: string;
+  /**
    * Desired style of pieces
    */
   style?: "merida" | "alpha" | "cheq" | "cburnett" | "leipzig";
@@ -104,5 +117,5 @@ type Options = {
   /**
    * Whether the board is to be flipped or not
    */
-  flipped?: boolean
+  flipped?: boolean;
 };

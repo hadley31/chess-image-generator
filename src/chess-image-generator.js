@@ -10,6 +10,7 @@ const {
   black,
   defaultSize,
   defaultLight,
+  defaultHighlight,
   defaultDark,
   defaultStyle,
   filePaths,
@@ -36,12 +37,14 @@ function ChessImageGenerator(options = {}) {
   this.size = options.size || defaultSize;
   this.light = options.light || defaultLight;
   this.dark = options.dark || defaultDark;
+  this.highlight = options.highlight || defaultHighlight;
   this.style = options.style || defaultStyle;
   this.drawLabels = options.drawLabels !== false;
   this.labelLight = options.labelLight || this.dark;
   this.labelDark = options.labelDark || this.light;
   this.flipped = options.flipped !== true;
 
+  this.highlightedSquares = {}
   this.ready = false;
 }
 
@@ -91,6 +94,37 @@ ChessImageGenerator.prototype = {
       }
     }
     this.ready = true;
+  },
+
+  /**
+   * Sets the squares to be highlighted
+   * @param {object} squares Map of squares to highlight
+   */
+  setHighlightedSquares(squares) {
+    this.highlightedSquares = squares;
+  },
+
+  /**
+   * Returns the highlight string if it exists in highlightedSquares, otherwise returns null
+   * @param {string} square The desired square
+   * @returns {string} Highlight string
+   */
+  getSquareHighlight(square) {
+    if (!this.highlightedSquares || !square || !(square in this.highlightedSquares)) {
+      return null;
+    }
+
+    const squareHighlight = this.highlightedSquares[square];
+
+    if (!squareHighlight) {
+      return null;
+    }
+
+    if (typeof(squareHighlight) == 'string') {
+      return squareHighlight;
+    }
+
+    return this.highlight;
   },
 
   /**
@@ -153,9 +187,16 @@ ChessImageGenerator.prototype = {
           );
         }
 
+        // Highlight Square
+        const square = cols[col(j)] + row(i);
+        const highlight = this.getSquareHighlight(square);
+        if (highlight) {
+          ctx.fillStyle = highlight;
+          ctx.fillRect(x, y, width, height);
+        }
 
-        // Draw Piece Image
-        const piece = this.chess.get(cols[col(j)] + row(i));
+        // Draw Piece
+        const piece = this.chess.get(square);
         if (
           piece &&
           piece.type !== "" &&
@@ -165,7 +206,7 @@ ChessImageGenerator.prototype = {
             filePaths[`${piece.color}${piece.type}`]
           }.png`;
           const imageFile = await loadImage(path.join(__dirname, image));
-          await ctx.drawImage(imageFile, x, y, width, height);
+          ctx.drawImage(imageFile, x, y, width, height);
         }
       }
     }
