@@ -54,7 +54,7 @@ ChessImageGenerator.prototype = {
    * @param {string} pgn Chess game PGN
    */
   loadPGN(pgn) {
-    if (!this.chess.load_pgn(pgn)) {
+    if (!this.chess.loadPgn(pgn)) {
       throw new Error("PGN could not be read successfully");
     } else {
       this.ready = true;
