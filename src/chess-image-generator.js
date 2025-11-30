@@ -54,10 +54,11 @@ ChessImageGenerator.prototype = {
    * @param {string} pgn Chess game PGN
    */
   loadPGN(pgn) {
-    if (!this.chess.loadPgn(pgn)) {
-      throw new Error("PGN could not be read successfully");
-    } else {
+    try {
+      this.chess.loadPgn(pgn);
       this.ready = true;
+    } catch (err) {
+      throw new Error("PGN could not be read successfully", { cause: err });
     }
   },
 
@@ -66,10 +67,11 @@ ChessImageGenerator.prototype = {
    * @param {string} fen Chess position FEN
    */
   loadFEN(fen) {
-    if (!this.chess.load(fen)) {
-      throw new Error("FEN could not be read successfully");
-    } else {
+    try {
+      this.chess.load(fen);
       this.ready = true;
+    } catch (err) {
+      throw new Error("FEN could not be read successfully", { cause: err });
     }
   },
 
